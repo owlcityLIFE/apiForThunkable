@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import datetime
 
 app = Flask(__name__)
@@ -10,10 +10,17 @@ def convert_timestamp():
     try:
         timestamp = int(timestamp)
         date_time = datetime.datetime.fromtimestamp(timestamp)
-        formatted_date_time = date_time.strftime('%Y-%m-%d %H:%M:%S')
-        return f"The formatted date and time for timestamp {timestamp} is: {formatted_date_time}"
+        formatted_date_time = {
+            'year': date_time.year,
+            'month': '{:02d}'.format(date_time.month),
+            'day': '{:02d}'.format(date_time.day),
+            'hours': '{:02d}'.format(date_time.hour),
+            'minutes': '{:02d}'.format(date_time.minute),
+            'seconds': '{:02d}'.format(date_time.second)
+        }
+        return jsonify(formatted_date_time)
     except ValueError:
-        return "Invalid timestamp"
+        return jsonify({'error': 'Invalid timestamp'})
 
 if __name__ == '__main__':
     app.run()
