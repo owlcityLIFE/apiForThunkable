@@ -1,4 +1,4 @@
-name: Deploy Node.js Web App to Pages
+name: Deploy Express.js Web App to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -38,10 +38,14 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Start Express.js server
+        run: npm start &
+      - name: Wait for server to start
+        run: sleep 5s
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          # Specify the build directory or the output directory of your Node.js web app
+          # Specify the build directory or the output directory of your Express.js web app
           # Replace "build" with the actual directory path if different
           deploy_dir: "./build"
