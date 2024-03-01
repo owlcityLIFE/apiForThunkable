@@ -42,6 +42,8 @@ jobs:
         run: npm start &
       - name: Wait for server to start
         run: sleep 5s
+      - name: Execute Node.js file
+        run: node app.js
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
