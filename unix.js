@@ -1,34 +1,33 @@
-function unixToDateTime(unixTimestamp) {
-    const date = new Date(unixTimestamp * 1000);
-
-    return {
-        year: date.getFullYear(),
-        month: date.getMonth() + 1,
-        day: date.getDate(),
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds()
-    };
+// Convert Unix timestamp to datetime object
+function unixToDateTime(timestamp) {
+  const date = new Date(timestamp * 1000);
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(), 
+    hours: date.getHours(),
+    minutes: date.getMinutes(),
+    seconds: date.getSeconds()
+  };
 }
 
-function handleRequest(timestamp) {
-    const response = unixToDateTime(timestamp);
-
-    return new Response(JSON.stringify(response), {
-        headers: {
-            'content-type': 'application/json'
-        }
-    });
-}
-
+// Handle requests
 addEventListener('fetch', event => {
-    const url = new URL(event.request.url);
-    const timestamp = url.searchParams.get('unix');
-
-    if (timestamp) {
-        const response = handleRequest(parseInt(timestamp));
-        event.respondWith(response);
-    } else {
-        event.respondWith(new Response('Invalid request', { status: 400 }));
-    }
+  event.respondWith(handleRequest(event.request));
 });
+
+async function handleRequest(request) {
+
+  // Get timestamp from URL query parameter 
+  const url = new URL(request.url);
+  const timestamp = url.searchParams.get('timestamp');
+
+  // Return response
+  const response = unixToDateTime(timestamp);  
+  return new Response(JSON.stringify(response), {
+    headers: {
+      'content-type': 'application/json'
+    }
+  });
+
+}
